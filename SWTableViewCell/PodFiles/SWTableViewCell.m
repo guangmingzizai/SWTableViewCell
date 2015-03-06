@@ -8,6 +8,7 @@
 
 #import "SWTableViewCell.h"
 #import "SWUtilityButtonView.h"
+#import "UITableViewCell+FixUITableViewCellAutolayout.h"
 
 static NSString * const kTableViewCellContentView = @"UITableViewCellContentView";
 
@@ -301,8 +302,6 @@ static NSString * const kTableViewPanState = @"state";
 
 - (void)layoutSubviews
 {
-    [super layoutSubviews];
-    
     // Offset the contentView origin so that it appears correctly w/rt the enclosing scroll view (to which we moved it).
     CGRect frame = self.contentView.frame;
     frame.origin.x = [self leftUtilityButtonsWidth];
@@ -316,6 +315,10 @@ static NSString * const kTableViewPanState = @"state";
     }
     
     [self updateCellState];
+    
+    // purposefully called at the end of the routine
+    // resolves constaint based crash on iOS6, bug #139
+    [super layoutSubviews];
 }
 
 - (void)setFrame:(CGRect)frame
