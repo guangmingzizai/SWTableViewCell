@@ -38,5 +38,14 @@
     return YES;
 }
 
+- (BOOL)touchesShouldCancelInContentView:(UIView *)view
+{
+    if ([view isKindOfClass:[UIControl class]]) {
+        return YES;
+    } else {
+        return [super touchesShouldCancelInContentView:view];
+    }
+}
+
 @end
 

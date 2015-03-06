@@ -85,6 +85,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     self.cellScrollView.showsHorizontalScrollIndicator = NO;
     self.cellScrollView.scrollsToTop = NO;
     self.cellScrollView.scrollEnabled = YES;
+    self.cellScrollView.delaysContentTouches = NO;
     
     _contentCellView = [[UIView alloc] init];
     [self.cellScrollView addSubview:_contentCellView];
