@@ -48,5 +48,13 @@ typedef NS_ENUM(NSInteger, SWCellState)
 - (void)showRightUtilityButtonsAnimated:(BOOL)animated;
 
 - (BOOL)isUtilityButtonsHidden;
+/**设置背景*/
+- (void)setScrollViewBackgroundColor:(UIColor *)backgroundColor;
+- (void)setRightUtilityButtonsViewBackgroundColor:(UIColor *)backgroundColor;
+- (void)setLeftUtilityButtonsViewBackgroundColor:(UIColor *)backgroundColor;
+/**设置上下间距*/
+- (void)setLeftUtilityTopMargin:(CGFloat)topMargin bottomMargin:(CGFloat)bottomMargin;
+- (void)setRightUtilityTopMargin:(CGFloat)topMargin bottomMargin:(CGFloat)bottomMargin;
+
 
 @end

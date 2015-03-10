@@ -33,6 +33,11 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 @property (nonatomic, strong) UILongPressGestureRecognizer *longPressGestureRecognizer;
 @property (nonatomic, strong) UITapGestureRecognizer *tapGestureRecognizer;
 
+@property (nonatomic, strong) NSLayoutConstraint *leftUtilityClipTopConstraint;
+@property (nonatomic, strong) NSLayoutConstraint *leftUtilityClipBottomConstraint;
+@property (nonatomic, strong) NSLayoutConstraint *rightUtilityClipTopConstraint;;
+@property (nonatomic, strong) NSLayoutConstraint *rightUtilityClipBottomConstraint;
+
 - (CGFloat)leftUtilityButtonsWidth;
 - (CGFloat)rightUtilityButtonsWidth;
 - (CGFloat)utilityButtonsPadding;
@@ -86,7 +91,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     self.cellScrollView.scrollsToTop = NO;
     self.cellScrollView.scrollEnabled = YES;
     self.cellScrollView.delaysContentTouches = NO;
-    
+    self.cellScrollView.backgroundColor = [UIColor clearColor];
     _contentCellView = [[UIView alloc] init];
     [self.cellScrollView addSubview:_contentCellView];
     
@@ -129,13 +134,18 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     // Such an approach is necessary in order for the utility views to sit on top to get taps, as well as allow the backgroundColor (and private UITableViewCellBackgroundView) to work properly.
 
     self.leftUtilityClipView = [[UIView alloc] init];
+    
     self.leftUtilityClipConstraint = [NSLayoutConstraint constraintWithItem:self.leftUtilityClipView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
+    self.leftUtilityClipTopConstraint = [NSLayoutConstraint constraintWithItem:self.leftUtilityClipView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0];
+    self.leftUtilityClipBottomConstraint = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.leftUtilityClipView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0];
     self.leftUtilityButtonsView = [[SWUtilityButtonView alloc] initWithUtilityButtons:nil
                                                                            parentCell:self
                                                                 utilityButtonSelector:@selector(leftUtilityButtonHandler:)];
 
     self.rightUtilityClipView = [[UIView alloc] initWithFrame:self.bounds];
     self.rightUtilityClipConstraint = [NSLayoutConstraint constraintWithItem:self.rightUtilityClipView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0 constant:0.0];
+    self.rightUtilityClipTopConstraint = [NSLayoutConstraint constraintWithItem:self.rightUtilityClipView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0];
+    self.rightUtilityClipBottomConstraint = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.rightUtilityClipView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0];
     self.rightUtilityButtonsView = [[SWUtilityButtonView alloc] initWithUtilityButtons:nil
                                                                             parentCell:self
                                                                  utilityButtonSelector:@selector(rightUtilityButtonHandler:)];
@@ -146,10 +156,16 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     UIView *buttonViews[] = { self.rightUtilityButtonsView, self.leftUtilityButtonsView };
     NSLayoutAttribute alignmentAttributes[] = { NSLayoutAttributeRight, NSLayoutAttributeLeft };
     
+    NSLayoutConstraint *topConstraintValues[] = {self.rightUtilityClipTopConstraint,self.leftUtilityClipTopConstraint};
+    NSLayoutConstraint *bottomConstraintValues[] = {self.rightUtilityClipBottomConstraint,self.leftUtilityClipBottomConstraint};
+    
     for (NSUInteger i = 0; i < 2; ++i)
     {
         UIView *clipView = clipViews[i];
         NSLayoutConstraint *clipConstraint = clipConstraints[i];
+        NSLayoutConstraint *clipTopConstraint = topConstraintValues[i];
+        NSLayoutConstraint *clipBottomConstraint = bottomConstraintValues[i];
+
         UIView *buttonView = buttonViews[i];
         NSLayoutAttribute alignmentAttribute = alignmentAttributes[i];
         
@@ -161,8 +177,8 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
         [clipViewParent addSubview:clipView];
         [self addConstraints:@[
                                // Pin the clipping view to the appropriate outer edges of the cell.
-                               [NSLayoutConstraint constraintWithItem:clipView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
-                               [NSLayoutConstraint constraintWithItem:clipView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0],
+                               clipTopConstraint,
+                               clipBottomConstraint,
                                [NSLayoutConstraint constraintWithItem:clipView attribute:alignmentAttribute relatedBy:NSLayoutRelationEqual toItem:self attribute:alignmentAttribute multiplier:1.0 constant:0.0],
                                clipConstraint,
                                ]];
@@ -534,6 +550,33 @@ static NSString * const kTableViewPanState = @"state";
 
 
 #pragma mark - Geometry helpers
+
+#pragma mark 修改
+- (void)setScrollViewBackgroundColor:(UIColor *)backgroundColor{
+    self.cellScrollView.backgroundColor = backgroundColor;
+}
+
+- (void)setRightUtilityButtonsViewBackgroundColor:(UIColor *)backgroundColor{
+    self.rightUtilityClipView.backgroundColor = backgroundColor;
+}
+
+- (void)setLeftUtilityButtonsViewBackgroundColor:(UIColor *)backgroundColor{
+    self.leftUtilityClipView.backgroundColor = backgroundColor;
+}
+
+- (void)setLeftUtilityTopMargin:(CGFloat)topMargin bottomMargin:(CGFloat)bottomMargin{
+    if (self.leftUtilityClipBottomConstraint.constant != bottomMargin && self.leftUtilityClipTopConstraint.constant != topMargin) {
+        self.leftUtilityClipTopConstraint.constant = topMargin;
+        self.leftUtilityClipBottomConstraint.constant = bottomMargin;
+    }
+}
+
+- (void)setRightUtilityTopMargin:(CGFloat)topMargin bottomMargin:(CGFloat)bottomMargin{
+    if (self.rightUtilityClipTopConstraint.constant != topMargin && self.rightUtilityClipBottomConstraint.constant != bottomMargin) {
+        self.rightUtilityClipBottomConstraint.constant = bottomMargin;
+        self.rightUtilityClipTopConstraint.constant = topMargin;
+    }
+}
 
 - (CGFloat)leftUtilityButtonsWidth
 {
