@@ -53,8 +53,9 @@ typedef NS_ENUM(NSInteger, SWCellState)
 - (void)setRightUtilityButtonsViewBackgroundColor:(UIColor *)backgroundColor;
 - (void)setLeftUtilityButtonsViewBackgroundColor:(UIColor *)backgroundColor;
 /**设置上下间距*/
-- (void)setLeftUtilityTopMargin:(CGFloat)topMargin bottomMargin:(CGFloat)bottomMargin;
-- (void)setRightUtilityTopMargin:(CGFloat)topMargin bottomMargin:(CGFloat)bottomMargin;
-
+@property (nonatomic, assign)CGFloat leftUtilityTopMargin;
+@property (nonatomic, assign)CGFloat leftUtilityBottomMargin;
+@property (nonatomic, assign)CGFloat rightUtilityTopMargin;
+@property (nonatomic, assign)CGFloat rightUtilityBottomMargin;
 
 @end

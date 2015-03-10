@@ -564,18 +564,36 @@ static NSString * const kTableViewPanState = @"state";
     self.leftUtilityClipView.backgroundColor = backgroundColor;
 }
 
-- (void)setLeftUtilityTopMargin:(CGFloat)topMargin bottomMargin:(CGFloat)bottomMargin{
-    if (self.leftUtilityClipBottomConstraint.constant != bottomMargin && self.leftUtilityClipTopConstraint.constant != topMargin) {
-        self.leftUtilityClipTopConstraint.constant = topMargin;
-        self.leftUtilityClipBottomConstraint.constant = bottomMargin;
-    }
+- (void)setLeftUtilityTopMargin:(CGFloat)leftUtilityTopMargin{
+    self.leftUtilityClipTopConstraint.constant = leftUtilityTopMargin;
 }
 
-- (void)setRightUtilityTopMargin:(CGFloat)topMargin bottomMargin:(CGFloat)bottomMargin{
-    if (self.rightUtilityClipTopConstraint.constant != topMargin && self.rightUtilityClipBottomConstraint.constant != bottomMargin) {
-        self.rightUtilityClipBottomConstraint.constant = bottomMargin;
-        self.rightUtilityClipTopConstraint.constant = topMargin;
-    }
+- (CGFloat)leftUtilityTopMargin{
+    return  self.leftUtilityClipTopConstraint.constant;
+}
+
+- (void)setLeftUtilityBottomMargin:(CGFloat)leftUtilityBottomMargin{
+    self.leftUtilityClipBottomConstraint.constant = leftUtilityBottomMargin;
+}
+
+- (CGFloat)leftUtilityBottomMargin{
+    return self.leftUtilityClipBottomConstraint.constant;
+}
+
+- (void)setRightUtilityTopMargin:(CGFloat)rightUtilityTopMargin{
+    self.rightUtilityClipTopConstraint.constant = rightUtilityTopMargin;
+}
+
+- (void)setRightUtilityBottomMargin:(CGFloat)rightUtilityBottomMargin{
+    self.rightUtilityClipTopConstraint.constant = rightUtilityBottomMargin;
+}
+
+- (CGFloat)rightUtilityBottomMargin{
+    return self.rightUtilityClipBottomConstraint.constant;
+}
+
+- (CGFloat)rightUtilityTopMargin{
+    return self.rightUtilityClipTopConstraint.constant;
 }
 
 - (CGFloat)leftUtilityButtonsWidth
