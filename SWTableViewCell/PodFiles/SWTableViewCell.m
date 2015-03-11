@@ -585,7 +585,7 @@ static NSString * const kTableViewPanState = @"state";
 }
 
 - (void)setRightUtilityBottomMargin:(CGFloat)rightUtilityBottomMargin{
-    self.rightUtilityClipTopConstraint.constant = rightUtilityBottomMargin;
+    self.rightUtilityClipBottomConstraint.constant = rightUtilityBottomMargin;
 }
 
 - (CGFloat)rightUtilityBottomMargin{
